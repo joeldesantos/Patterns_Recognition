@@ -49,33 +49,19 @@ public class PerceptronV2 implements Algorithm{
     }
  
     private double train (String data, int dataClass) {
-//        int epochs = 0;
         int output;
         char[] chars;
-//        double globalError = 0;
         double localError;
-//        do {
-//            epochs++;
-//            globalError = 0;
-            // calculate predicted class
-            chars = data.toCharArray();
-            output = calculateOutput(theta,weights, chars);
-            // difference between predicted and actual class values
-            localError = dataClass - output;
-            //update bias (w[0]) and weights
-            weights[0] += learningRate * localError;
-            for (int i = 0, w = 1; w < weights.length; i++, w++) {
-                weights[w] += learningRate * localError * Integer.parseInt(""+chars[i]);
-            }
-
-//            //summation of squared error (error value for all instances)
-//            globalError += (localError*localError);
-//
-//            System.out.println("Class = "+dataClass+", epochs = "+epochs+", global Error = "+globalError);
-//
-//            weightsLog.add(weights);
-//            errorLog.add(globalError);
-//        } while (globalError != 0 && epochs < this.epochLimit);
+        // calculate predicted class
+        chars = data.toCharArray();
+        output = calculateOutput(theta,weights, chars);
+        // difference between predicted and actual class values
+        localError = dataClass - output;
+        //update bias (w[0]) and weights
+        weights[0] += learningRate * localError;
+        for (int i = 0, w = 1; w < weights.length; i++, w++) {
+            weights[w] += learningRate * localError * Integer.parseInt(""+chars[i]);
+        }
 
         this.trained = true;
         
@@ -97,8 +83,6 @@ public class PerceptronV2 implements Algorithm{
                 throw new IllegalArgumentException("List sizes does not match.");
             }
             int epochs = 0;
-            int output;
-            char[] chars;
             double globalError = 0;
             double localError = 0;
             do {

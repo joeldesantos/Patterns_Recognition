@@ -7,6 +7,7 @@ package pr.algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
+import static pr.algorithms.PerceptronV2.calculateOutput;
 import pr.util.Utils;
 
 /**
@@ -38,6 +39,7 @@ public class Adaline implements Algorithm{
         }
     }
  
+    /*
     private List train (String data, int dataClass) {
         List calculatedWeights = new ArrayList();
         
@@ -74,6 +76,28 @@ public class Adaline implements Algorithm{
         
         return calculatedWeights;
     }
+    */
+    
+    private double train (String data, int dataClass) {
+        int output;
+        char[] chars;
+        double localError;
+        // calculate predicted class
+        chars = data.toCharArray();
+        output = calculateOutput(theta,weights, chars);
+        // difference between predicted and actual class values
+        localError = dataClass - output;
+        //update bias (w[0]) and weights
+        weights[0] += learningRate * localError;
+        for (int i = 0, w = 1; w < weights.length; i++, w++) {
+            int x = Integer.parseInt(""+chars[i]);
+            weights[w] += learningRate * localError * (sigmoid(x)* (1 - sigmoid(x))) * x;
+        }
+
+        this.trained = true;
+        
+        return localError;
+    }
 
     public static int calculateOutput(double theta, double weights[], char[] data) {
         double sum = weights[0];
@@ -93,10 +117,26 @@ public class Adaline implements Algorithm{
         if (classes != null && data != null) {
             if (classes.size() != data.size()) {
                 throw new IllegalArgumentException("List sizes does not match.");
-            }
-            for (int i = 0; i < data.size(); i ++) {
-                train(data.get(i), classes.get(i));
-            }
+            }            
+            int epochs = 0;
+            double globalError = 0;
+            double localError = 0;
+            do {
+                epochs++;
+                globalError = 0;
+                for (int i = 0; i < data.size(); i ++) {
+                    localError = train(data.get(i), classes.get(i));
+                    
+                    //summation of squared error (error value for all instances)
+                    globalError += (localError*localError);
+                }
+
+                System.out.println("epochs = "+epochs+", global Error = "+globalError);
+
+                weightsLog.add(weights);
+                errorLog.add(globalError);
+            } while (epochs < this.epochLimit);
+
         }
     }
 
