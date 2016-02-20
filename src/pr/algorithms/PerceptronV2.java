@@ -6,15 +6,8 @@
 package pr.algorithms;
 
 import java.awt.Point;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import pr.ui.Graph;
-import pr.ui.InputForm;
-import pr.util.CallTrainForFilesInFolder;
-import pr.util.LoadCoordinatesFromFile;
 import pr.util.Utils;
 
 /**
@@ -55,17 +48,15 @@ public class PerceptronV2 implements Algorithm{
         }
     }
  
-    private List train (String data, int dataClass) {
-        List calculatedWeights = new ArrayList();
-        
-        int epochs = 0;
+    private double train (String data, int dataClass) {
+//        int epochs = 0;
         int output;
         char[] chars;
-        double globalError = 0;
+//        double globalError = 0;
         double localError;
-        do {
-            epochs++;
-            globalError = 0;
+//        do {
+//            epochs++;
+//            globalError = 0;
             // calculate predicted class
             chars = data.toCharArray();
             output = calculateOutput(theta,weights, chars);
@@ -77,30 +68,22 @@ public class PerceptronV2 implements Algorithm{
                 weights[w] += learningRate * localError * Integer.parseInt(""+chars[i]);
             }
 
-            //summation of squared error (error value for all instances)
-            globalError += (localError*localError);
-
-//                for (int a = 0; a < weights.length; a++) {
-//                    System.out.print("w["+a+"] = "+weights[a]+", ");
-//                }
-            System.out.println("Class = "+dataClass+", epochs = "+epochs+", global Error = "+globalError);
-//                calculatedWeights.add(weights);
-            weightsLog.add(weights);
-            errorLog.add(globalError);
-        } while (globalError != 0 && epochs < this.epochLimit);
-//        for (int a = 0; a < weights.length; a++) {
-//            System.out.print("w["+a+"] = "+weights[a]+", ");
-//        }
-//        System.out.println("epochs = "+epochs);
+//            //summation of squared error (error value for all instances)
+//            globalError += (localError*localError);
+//
+//            System.out.println("Class = "+dataClass+", epochs = "+epochs+", global Error = "+globalError);
+//
+//            weightsLog.add(weights);
+//            errorLog.add(globalError);
+//        } while (globalError != 0 && epochs < this.epochLimit);
 
         this.trained = true;
         
-        return calculatedWeights;
+        return localError;
     }
 
     public static int calculateOutput(double theta, double weights[], char[] data) {
         double sum = weights[0];
-//            System.out.println("data.length = "+data.length);
         for (int i = 0, w = 1; w < weights.length; i++, w++) {
             sum += Integer.parseInt(""+data[i]) * weights[w];
         }
@@ -113,9 +96,26 @@ public class PerceptronV2 implements Algorithm{
             if (classes.size() != data.size()) {
                 throw new IllegalArgumentException("List sizes does not match.");
             }
-            for (int i = 0; i < data.size(); i ++) {
-                train(data.get(i), classes.get(i));
-            }
+            int epochs = 0;
+            int output;
+            char[] chars;
+            double globalError = 0;
+            double localError = 0;
+            do {
+                epochs++;
+                globalError = 0;
+                for (int i = 0; i < data.size(); i ++) {
+                    localError = train(data.get(i), classes.get(i));
+                    
+                    //summation of squared error (error value for all instances)
+                    globalError += (localError*localError);
+                }
+
+                System.out.println("epochs = "+epochs+", global Error = "+globalError);
+
+                weightsLog.add(weights);
+                errorLog.add(globalError);
+            } while (globalError != 0 && epochs < this.epochLimit);
         }
     }
 
@@ -150,6 +150,11 @@ public class PerceptronV2 implements Algorithm{
         }
         
         return sb.toString();
+    }
+
+    @Override
+    public List<Double> getErrorLog() {
+        return this.errorLog;
     }
 
 }

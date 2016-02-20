@@ -15,9 +15,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import org.jfree.ui.RefineryUtilities;
 import pr.algorithms.Adaline;
 import pr.algorithms.Algorithm;
 import pr.algorithms.PerceptronV2;
+import pr.graph.ErrorGraph;
 import pr.util.Utils;
 
 /**
@@ -165,6 +167,11 @@ public class InputForm extends javax.swing.JFrame {
         jLabel5.setText("Graficas y logs:");
 
         showErrorsBtn.setText("Errors");
+        showErrorsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showErrorsBtnActionPerformed(evt);
+            }
+        });
 
         showWeigthsLogBtn.setText("Log de Pesos");
         showWeigthsLogBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -528,6 +535,15 @@ public class InputForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_showTestDataBtnActionPerformed
 
+    private void showErrorsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showErrorsBtnActionPerformed
+        System.out.println("errorlogs = "+algorithm.getErrorLog().size());
+        eg = new ErrorGraph("Errors", algorithm.getErrorLog());
+        eg.pack();
+        eg.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        RefineryUtilities.centerFrameOnScreen(eg);
+        eg.setVisible(true);
+    }//GEN-LAST:event_showErrorsBtnActionPerformed
+
     private void reset(String selectedAlgortihm) {
         trainBtn.setEnabled(false);
         testBtn.setEnabled(false);
@@ -618,6 +634,7 @@ public class InputForm extends javax.swing.JFrame {
     private List<String> data;
     private String lastUsedDirectory = "c:";
     private JFileChooser jfc;    
+    private ErrorGraph eg;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMI;
     private javax.swing.JMenuItem adelineMI;

@@ -34,12 +34,12 @@ public class Utils {
      * @return a random double value between min and max
      */ 
     public static double randomNumber(int min, int max) {
-        DecimalFormat df = new DecimalFormat("#.####");
-        double d = min + Math.random() * (max - min);
-        String s = df.format(d);
-        double x = Double.parseDouble(s);
-        return x;
-//        return min + Math.random() * (max - min);
+//        DecimalFormat df = new DecimalFormat("#.####");
+//        double d = min + Math.random() * (max - min);
+//        String s = df.format(d);
+//        double x = Double.parseDouble(s);
+//        return x;
+        return min + Math.random() * (max - min);
     }
     
     public static List<Integer> getCoordinates (String fact) {
@@ -119,7 +119,8 @@ public class Utils {
         DecimalFormat df = new DecimalFormat("#.####");
         for (int i = 0; i < weights.length; i++) {
             sb.append("\"");
-            sb.append(df.format(weights[i]));
+            sb.append(""+weights[i]);
+//            sb.append(df.format(weights[i]));
             sb.append("\"");
             sb.append(",");
         }

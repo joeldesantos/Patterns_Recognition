@@ -133,4 +133,9 @@ public class Adaline implements Algorithm{
         return sb.toString();
     }
 
+    @Override
+    public List<Double> getErrorLog() {
+        return this.errorLog;
+    }
+
 }

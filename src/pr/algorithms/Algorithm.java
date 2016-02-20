@@ -19,5 +19,6 @@ public interface Algorithm {
     public boolean isTrained();
     public String getWeights();
     public String getWeightsLog();
+    public List<Double> getErrorLog();
     
 }

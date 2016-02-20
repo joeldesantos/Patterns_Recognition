@@ -30,13 +30,9 @@ public class GraphXYDataSet extends AbstractXYDataset
     private Range domainRange;
     private Range range;
 
-    public GraphXYDataSet() {
-        this(4, 40);
-    }
-
-    public GraphXYDataSet(int i, int j) {
-        xValues = new Double[i][j];
-        yValues = new Double[i][j];
+    public GraphXYDataSet(Double[][] xValues, Double[][] yValues, int i, int j) {
+        this.xValues = xValues;
+        this.yValues = yValues;
         seriesCount = i;
         itemCount = j;
         double d = (1.0D / 0.0D);
@@ -45,16 +41,14 @@ public class GraphXYDataSet extends AbstractXYDataset
         double d3 = (-1.0D / 0.0D);
         for (int k = 0; k < i; k++) {
             for (int l = 0; l < j; l++) {
-                double d4 = (Math.random() - 0.5D) * 200D;
-                xValues[k][l] = new Double(d4);
+                double d4 = xValues[k][l];
                 if (d4 < d) {
                     d = d4;
                 }
                 if (d4 > d1) {
                     d1 = d4;
                 }
-                double d5 = (Math.random() + 0.5D) * 6D * d4 + d4;
-                yValues[k][l] = new Double(d5);
+                double d5 = yValues[k][l];
                 if (d5 < d2) {
                     d2 = d5;
                 }
