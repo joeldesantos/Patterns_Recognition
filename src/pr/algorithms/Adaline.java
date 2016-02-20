@@ -5,51 +5,34 @@
  */
 package pr.algorithms;
 
-import java.awt.Point;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import pr.ui.Graph;
-import pr.ui.InputForm;
-import pr.util.CallTrainForFilesInFolder;
-import pr.util.LoadCoordinatesFromFile;
 import pr.util.Utils;
 
 /**
  *
  * @author Joel de Santos <joeldesantos@gmail.com>
  */
-public class PerceptronV2 implements Algorithm{
+public class Adaline implements Algorithm{
     
     private double learningRate;
     private double theta;
     public double[] weights;
     private List<double[]> weightsLog;
     private List<Double> errorLog;
-    private List<Point> points;
     private int epochLimit;
     private boolean trained = false;
 
-    public PerceptronV2 () {
+    public Adaline () {
     }   
     
-    private PerceptronV2 (double learningRate, double[] weights, double theta, int epochLimit) {
-        this.learningRate = learningRate;
-        this.theta = theta;
-        this.weights = weights;
-        this.epochLimit = epochLimit;
-    }
-    
-    public void initPerceptron(int numberOfFeatures, double learningRate, double theta, int epochLimit){
+    public void initAdeline(int numberOfFeatures, double learningRate, double theta, int epochLimit){
         this.learningRate = learningRate;
         this.theta = theta;
         this.epochLimit = epochLimit;
         this.weights = new double[numberOfFeatures + 1];
         this.weightsLog = new ArrayList<>();
         this.errorLog = new ArrayList<>();
-        this.points = new ArrayList<>();
         for (int i = 0; i < weights.length; i++) {
             this.weights[i] = Utils.randomNumber(0, 1);
         }
@@ -74,24 +57,18 @@ public class PerceptronV2 implements Algorithm{
             //update bias (w[0]) and weights
             weights[0] += learningRate * localError;
             for (int i = 0, w = 1; w < weights.length; i++, w++) {
-                weights[w] += learningRate * localError * Integer.parseInt(""+chars[i]);
+                int x = Integer.parseInt(""+chars[i]);
+                weights[w] += learningRate * localError * (sigmoid(x)* (1 - sigmoid(x))) * x;
             }
 
             //summation of squared error (error value for all instances)
             globalError += (localError*localError);
 
-//                for (int a = 0; a < weights.length; a++) {
-//                    System.out.print("w["+a+"] = "+weights[a]+", ");
-//                }
             System.out.println("Class = "+dataClass+", epochs = "+epochs+", global Error = "+globalError);
-//                calculatedWeights.add(weights);
+
             weightsLog.add(weights);
             errorLog.add(globalError);
-        } while (globalError != 0 && epochs < this.epochLimit);
-//        for (int a = 0; a < weights.length; a++) {
-//            System.out.print("w["+a+"] = "+weights[a]+", ");
-//        }
-//        System.out.println("epochs = "+epochs);
+        } while (epochs < this.epochLimit);
 
         this.trained = true;
         
@@ -105,6 +82,10 @@ public class PerceptronV2 implements Algorithm{
             sum += Integer.parseInt(""+data[i]) * weights[w];
         }
         return (sum >= theta) ? 1 : 0;
+    }
+    
+    private double sigmoid (int x) {
+        return 1/(1+Math.exp(-x));
     }
 
     @Override

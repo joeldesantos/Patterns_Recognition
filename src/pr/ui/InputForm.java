@@ -5,8 +5,20 @@
  */
 package pr.ui;
 
-import javax.swing.JDialog;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import pr.algorithms.Adaline;
+import pr.algorithms.Algorithm;
+import pr.algorithms.PerceptronV2;
+import pr.util.Utils;
 
 /**
  *
@@ -59,6 +71,7 @@ public class InputForm extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         resultTF = new javax.swing.JTextField();
         algorithmCB = new javax.swing.JComboBox<>();
+        showTestDataBtn = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         minimuDistanceMI = new javax.swing.JMenuItem();
@@ -82,20 +95,40 @@ public class InputForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Reconocimiento de Patrones");
 
+        trainDataTF.setEditable(false);
+
         jLabel1.setText("Datos de entrenamiento:");
 
         textDataBtn.setText("Browse");
+        textDataBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textDataBtnActionPerformed(evt);
+            }
+        });
 
         trainBtn.setText("Train");
         trainBtn.setEnabled(false);
+        trainBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                trainBtnActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Learning Rate:");
 
+        learningRateTF.setText("0.1");
+
         jLabel4.setText("Limite de epocas:");
+
+        epochLimitTF.setText("100");
 
         jLabel6.setText("Theta:");
 
+        thetaTF.setText("1");
+
         jLabel7.setText("Datos de prueba:");
+
+        testDataTF.setEditable(false);
 
         testDataBtn.setText("Browse");
         testDataBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -106,11 +139,21 @@ public class InputForm extends javax.swing.JFrame {
 
         testBtn.setText("Prueba");
         testBtn.setEnabled(false);
+        testBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                testBtnActionPerformed(evt);
+            }
+        });
 
         manualEntryBtn.setText("Entrada Manual");
         manualEntryBtn.setEnabled(false);
 
         showWeightsBtn.setText("Mostrar pesos");
+        showWeightsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showWeightsBtnActionPerformed(evt);
+            }
+        });
 
         showPlaneBtn.setText("Plano");
         showPlaneBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -124,14 +167,32 @@ public class InputForm extends javax.swing.JFrame {
         showErrorsBtn.setText("Errors");
 
         showWeigthsLogBtn.setText("Log de Pesos");
+        showWeigthsLogBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showWeigthsLogBtnActionPerformed(evt);
+            }
+        });
 
         showPlaneLogBtn.setText("Log de Planos");
+        showPlaneLogBtn.setEnabled(false);
 
         jLabel8.setText("Resultado:");
 
         resultTF.setEditable(false);
 
-        algorithmCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona un algoritmo", "Minima Distancia", "Perceptron", "Adeline" }));
+        algorithmCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona un algoritmo", "Minima Distancia", "Perceptron", "Adaline" }));
+        algorithmCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                algorithmCBActionPerformed(evt);
+            }
+        });
+
+        showTestDataBtn.setText("Mostrar");
+        showTestDataBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showTestDataBtnActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("Algoritmo");
 
@@ -154,7 +215,7 @@ public class InputForm extends javax.swing.JFrame {
         jMenu1.add(perceptronMI);
 
         adelineMI.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK));
-        adelineMI.setText("Adeline");
+        adelineMI.setText("Adaline");
         adelineMI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 adelineMIActionPerformed(evt);
@@ -227,19 +288,24 @@ public class InputForm extends javax.swing.JFrame {
                                 .addComponent(jLabel7)
                                 .addComponent(jSeparator6, javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(testBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(testDataTF))
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(testDataTF, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(testBtn))
-                                    .addGap(10, 10, 10)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                            .addComponent(jLabel8)
-                                            .addGap(149, 149, 149))
                                         .addGroup(layout.createSequentialGroup()
+                                            .addGap(50, 50, 50)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                    .addComponent(jLabel8)
+                                                    .addGap(149, 149, 149))
+                                                .addComponent(resultTF, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                             .addComponent(testDataBtn)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(manualEntryBtn))
-                                        .addComponent(resultTF, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(manualEntryBtn)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(showTestDataBtn))))
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(trainDataTF, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -304,7 +370,8 @@ public class InputForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(testDataTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(testDataBtn)
-                    .addComponent(manualEntryBtn))
+                    .addComponent(manualEntryBtn)
+                    .addComponent(showTestDataBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel8)
                 .addGap(8, 8, 8)
@@ -328,7 +395,9 @@ public class InputForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void minimuDistanceMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minimuDistanceMIActionPerformed
+        reset("Minima Distancia");
         // Minima Distancia
+        
     }//GEN-LAST:event_minimuDistanceMIActionPerformed
 
     private void aboutMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMIActionPerformed
@@ -338,7 +407,23 @@ public class InputForm extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutMIActionPerformed
 
     private void testDataBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testDataBtnActionPerformed
-        // TODO add your handling code here:
+        jfc = new JFileChooser(lastUsedDirectory);
+        int returnVal = jfc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            testBtn.setEnabled(true);
+            File file = jfc.getSelectedFile();
+            testDataTF.setText("Loaded");
+            lastUsedDirectory = file.getParent();
+            try {
+                // Read the data
+                List<String> lines = Files.readAllLines(Paths.get(file.getAbsolutePath()));
+                
+                testData = Utils.getTestDataFromRawDataList(lines);
+                
+            } catch (IOException ex) {
+                Logger.getLogger(InputForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_testDataBtnActionPerformed
 
     private void showPlaneBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPlaneBtnActionPerformed
@@ -346,15 +431,150 @@ public class InputForm extends javax.swing.JFrame {
     }//GEN-LAST:event_showPlaneBtnActionPerformed
 
     private void perceptronMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_perceptronMIActionPerformed
-        // Perceptron
+        reset("Perceptron");
+        getPerceptron();
     }//GEN-LAST:event_perceptronMIActionPerformed
 
     private void adelineMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adelineMIActionPerformed
+        reset("Adaline");
         // Adeline
     }//GEN-LAST:event_adelineMIActionPerformed
 
-    private void reset() {
-        
+    private void textDataBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textDataBtnActionPerformed
+        jfc = new JFileChooser(lastUsedDirectory);
+        int returnVal = jfc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            trainBtn.setEnabled(true);
+            File file = jfc.getSelectedFile();
+            trainDataTF.setText(file.getName());
+            lastUsedDirectory = file.getParent();
+            try {
+                // Read the data
+                List<String> lines = Files.readAllLines(Paths.get(file.getAbsolutePath()));
+                
+                // Obtain the classes and data from the raw data
+                classes = new ArrayList();
+                data = new ArrayList();
+                Utils.getTrainingListsFromRawDataList(lines, data, classes);
+                
+            } catch (IOException ex) {
+                Logger.getLogger(InputForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_textDataBtnActionPerformed
+
+    private void trainBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trainBtnActionPerformed
+        // Train the algorithm
+        if (algorithm != null) {
+            trainDataTF.setText("");
+            algorithm.train(classes, data);
+        } else {
+            Utils.showDialoj("Error", "No se ha seleccionado un algoritmo.", this);
+        }
+    }//GEN-LAST:event_trainBtnActionPerformed
+
+    private void algorithmCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_algorithmCBActionPerformed
+        String value = algorithmCB.getSelectedItem().toString();
+        if ("Minima Distancia".equals(value)) {
+            reset(value);
+            algorithm = new PerceptronV2();
+        } else if ("Perceptron".equals(value)) {
+            reset(value);
+            algorithm = getPerceptron();
+        } else if ("Adaline".equals(value)) {
+            reset(value);
+            algorithm = getAdaline();
+        }
+    }//GEN-LAST:event_algorithmCBActionPerformed
+
+    private void testBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testBtnActionPerformed
+        // Test the algorithm
+        if (algorithm != null && algorithm.isTrained()) {
+            trainDataTF.setText("");
+            int classType = algorithm.test(testData);
+            resultTF.setText("Clase "+(classType==0?1:2));
+        } else {
+            Utils.showDialoj("Error", "No se ha seleccionado/entrenado el algoritmo.", this);
+        }
+    }//GEN-LAST:event_testBtnActionPerformed
+
+    private void showWeightsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showWeightsBtnActionPerformed
+        if (algorithm != null && algorithm.isTrained()) {
+            Utils.showDialoj("Pesos", algorithm.getWeights(), this);
+        } else {
+            Utils.showDialoj("Error", "No se ha seleccionado/entrenado el algoritmo.", this);
+        }
+    }//GEN-LAST:event_showWeightsBtnActionPerformed
+
+    private void showWeigthsLogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showWeigthsLogBtnActionPerformed
+        if (algorithm != null && algorithm.isTrained()) {
+            Utils.showDialoj("Pesos", algorithm.getWeightsLog(), this);
+        } else {
+            Utils.showDialoj("Error", "No se ha seleccionado/entrenado el algoritmo.", this);
+        }
+    }//GEN-LAST:event_showWeigthsLogBtnActionPerformed
+
+    private void showTestDataBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTestDataBtnActionPerformed
+        if (algorithm != null && algorithm.isTrained()) {
+            String displayData = "";
+            for (int h = 0, i = 20; i < testData.length(); h = i + 1, i += 20) {
+                displayData += testData.substring(h,i);
+                displayData += "\n";
+            }
+            displayData = displayData.substring(0, displayData.length() - 1);
+            Utils.showDialoj("Test data", displayData, this);
+        } else {
+            Utils.showDialoj("Error", "No se ha seleccionado/entrenado el algoritmo.", this);
+        }
+    }//GEN-LAST:event_showTestDataBtnActionPerformed
+
+    private void reset(String selectedAlgortihm) {
+        trainBtn.setEnabled(false);
+        testBtn.setEnabled(false);
+        trainDataTF.setText("");
+        testDataTF.setText("");
+        resultTF.setText("");
+        if (Utils.isNullOrEmpty(selectedAlgortihm)) {
+            algorithmCB.setSelectedItem("Selecciona un algoritmo");
+        } else {
+            algorithmCB.setSelectedItem(selectedAlgortihm);
+        }
+    }
+    
+    private Algorithm getPerceptron() throws NumberFormatException {
+        if (Utils.isNullOrEmpty(learningRateTF.getText())) {
+            Utils.showDialoj("Error", "Por favor especifique un learning rate", this);
+        }
+        if (Utils.isNullOrEmpty(thetaTF.getText())) {
+            Utils.showDialoj("Error", "Por favor especifique un valor para theta", this);
+        }
+        if (Utils.isNullOrEmpty(epochLimitTF.getText())) {
+            Utils.showDialoj("Error", "Por favor especifique un limite de epocas", this);
+        }
+        double learningRate = Double.parseDouble(learningRateTF.getText());
+        double theta = Double.parseDouble(thetaTF.getText());
+        int epochLimit = Integer.parseInt(epochLimitTF.getText());
+        PerceptronV2 algo = new PerceptronV2();
+        algo.initPerceptron(600, learningRate, theta, epochLimit);
+        return algo;
+    }
+    
+    private Algorithm getAdaline() throws NumberFormatException {
+        if (Utils.isNullOrEmpty(learningRateTF.getText())) {
+            Utils.showDialoj("Error", "Por favor especifique un learning rate", this);
+        }
+        if (Utils.isNullOrEmpty(thetaTF.getText())) {
+            Utils.showDialoj("Error", "Por favor especifique un valor para theta", this);
+        }
+        if (Utils.isNullOrEmpty(epochLimitTF.getText())) {
+            Utils.showDialoj("Error", "Por favor especifique un limite de epocas", this);
+        }
+        double learningRate = Double.parseDouble(learningRateTF.getText());
+        double theta = Double.parseDouble(thetaTF.getText());
+        int epochLimit = Integer.parseInt(epochLimitTF.getText());
+        Adaline algo = new Adaline();
+        algo.initAdeline(600, learningRate, theta, epochLimit);
+        return algo;
     }
     
     /**
@@ -392,6 +612,12 @@ public class InputForm extends javax.swing.JFrame {
         });
     }
 
+    private Algorithm algorithm;
+    private String testData;
+    private List<Integer> classes;
+    private List<String> data;
+    private String lastUsedDirectory = "c:";
+    private JFileChooser jfc;    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMI;
     private javax.swing.JMenuItem adelineMI;
@@ -426,6 +652,7 @@ public class InputForm extends javax.swing.JFrame {
     private javax.swing.JButton showPlaneLogBtn;
     private javax.swing.JMenuItem showPlaneLogMI;
     private javax.swing.JMenuItem showPlaneMI;
+    private javax.swing.JButton showTestDataBtn;
     private javax.swing.JButton showWeightsBtn;
     private javax.swing.JMenuItem showWeightsMI;
     private javax.swing.JButton showWeigthsLogBtn;

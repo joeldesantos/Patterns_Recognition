@@ -46,7 +46,7 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Alt+A"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Adeline"/>
+                <Property name="text" type="java.lang.String" value="Adaline"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="adelineMIActionPerformed"/>
@@ -170,22 +170,29 @@
                               <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jSeparator6" alignment="1" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="testDataTF" min="-2" pref="109" max="-2" attributes="0"/>
-                                      <Component id="testBtn" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="testBtn" max="32767" attributes="0"/>
+                                      <Component id="testDataTF" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="149" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Group type="102" alignment="1" attributes="0">
+                                                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                                                  <EmptySpace min="-2" pref="149" max="-2" attributes="0"/>
+                                              </Group>
+                                              <Component id="resultTF" min="-2" pref="103" max="-2" attributes="0"/>
+                                          </Group>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Component id="testDataBtn" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Component id="manualEntryBtn" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="showTestDataBtn" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="resultTF" min="-2" pref="103" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -270,6 +277,7 @@
                   <Component id="testDataTF" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="testDataBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="manualEntryBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="showTestDataBtn" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
@@ -296,6 +304,9 @@
   </Layout>
   <SubComponents>
     <Component class="javax.swing.JTextField" name="trainDataTF">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
@@ -306,12 +317,18 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Browse"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textDataBtnActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="trainBtn">
       <Properties>
         <Property name="text" type="java.lang.String" value="Train"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="trainBtnActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator2">
     </Component>
@@ -321,6 +338,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="learningRateTF">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0.1"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
@@ -328,6 +348,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="epochLimitTF">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="100"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
@@ -335,6 +358,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="thetaTF">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="1"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator3">
     </Component>
@@ -344,6 +370,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="testDataTF">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="testDataBtn">
       <Properties>
@@ -358,6 +387,9 @@
         <Property name="text" type="java.lang.String" value="Prueba"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="testBtnActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="manualEntryBtn">
       <Properties>
@@ -369,6 +401,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Mostrar pesos"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showWeightsBtnActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator6">
     </Component>
@@ -394,10 +429,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Log de Pesos"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showWeigthsLogBtnActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="showPlaneLogBtn">
       <Properties>
         <Property name="text" type="java.lang.String" value="Log de Planos"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
@@ -417,13 +456,24 @@
             <StringItem index="0" value="Selecciona un algoritmo"/>
             <StringItem index="1" value="Minima Distancia"/>
             <StringItem index="2" value="Perceptron"/>
-            <StringItem index="3" value="Adeline"/>
+            <StringItem index="3" value="Adaline"/>
           </StringArray>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="algorithmCBActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="showTestDataBtn">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Mostrar"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showTestDataBtnActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

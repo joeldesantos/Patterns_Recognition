@@ -15,19 +15,19 @@ import pr.util.Utils;
  *
  * @author Joel de Santos <joeldesantos@gmail.com>
  */
-public class Adeline {
+public class AdelineOld {
     
     private double learningRate;
     private int theta;
     private double[] weights;
     private int epochLimit;
 
-    public Adeline (int epochLimit) {
+    public AdelineOld (int epochLimit) {
         this.epochLimit = epochLimit;
         initPerceptron(2);
     }   
     
-    public Adeline (double learningRate, double[] weights, int theta, int epochLimit) {
+    public AdelineOld (double learningRate, double[] weights, int theta, int epochLimit) {
         this.learningRate = learningRate;
         this.theta = theta;
         this.weights = weights;
@@ -35,7 +35,7 @@ public class Adeline {
     }
     
     public static void main (String[] args) {
-        Adeline p = new Adeline(10000);
+        AdelineOld p = new AdelineOld(10000);
 //        LoadCoordinatesFromFile lcff = new LoadCoordinatesFromFile();
         LoadCoordinatesFromFile lcff = new LoadCoordinatesFromFile("c:/_data/simple_class1.txt", "c:/_data/simple_class2.txt");
         List lw1 = p.train(lcff.getClass1(), 0);

@@ -225,7 +225,7 @@ public class Perceptron {
         return weigths;
     }
 
-    /**
+        /**
      * returns either 1 or 0 using a threshold function
      * theta is 0range
      * @param theta an integer value for the threshold

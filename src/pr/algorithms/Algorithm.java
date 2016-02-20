@@ -13,8 +13,11 @@ import java.util.List;
  */
 public interface Algorithm {
     
-    public void train(List<String> data);
+    public void train(List<Integer> classes, List<String> data);
 //    public String test (String clase1, String clase2, String data);
     public int test(String data);
+    public boolean isTrained();
+    public String getWeights();
+    public String getWeightsLog();
     
 }
