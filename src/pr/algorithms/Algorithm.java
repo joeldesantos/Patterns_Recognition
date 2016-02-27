@@ -20,5 +20,6 @@ public interface Algorithm {
     public String getWeights();
     public String getWeightsLog();
     public List<Double> getErrorLog();
+    public double getBias();
     
 }

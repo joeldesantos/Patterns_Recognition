@@ -141,4 +141,9 @@ public class PerceptronV2 implements Algorithm{
         return this.errorLog;
     }
 
+    @Override
+    public double getBias() {
+        return weights[0];
+    }
+
 }

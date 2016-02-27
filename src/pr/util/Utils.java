@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import javax.imageio.ImageIO;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
@@ -74,6 +75,18 @@ public class Utils {
     public static void showDialoj (String title, String text, Frame parent) {
         JTextPane p = new JTextPane();
         p.setText(text);
+//        JScrollPane scroll = new JScrollPane();
+//        scroll.add(p);
+        JDialog dialog = new JDialog(parent, title);
+        dialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+//        dialog.add(scroll);
+        dialog.add(p);
+        dialog.pack();
+        dialog.setLocationRelativeTo(parent);
+        dialog.setVisible(true);
+    }
+    
+    public static void showDialoj (String title, JPanel p, Frame parent) {
 //        JScrollPane scroll = new JScrollPane();
 //        scroll.add(p);
         JDialog dialog = new JDialog(parent, title);

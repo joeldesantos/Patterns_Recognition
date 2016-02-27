@@ -5,6 +5,7 @@
  */
 package pr.ui;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,11 +16,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import org.jfree.ui.RefineryUtilities;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.StandardTickUnitSource;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import pr.algorithms.Adaline;
 import pr.algorithms.Algorithm;
 import pr.algorithms.PerceptronV2;
-import pr.graph.ErrorGraph;
 import pr.util.Utils;
 
 /**
@@ -434,7 +445,25 @@ public class InputForm extends javax.swing.JFrame {
     }//GEN-LAST:event_testDataBtnActionPerformed
 
     private void showPlaneBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPlaneBtnActionPerformed
-        // TODO add your handling code here:
+        try {
+            XYSeries xyseries = new XYSeries("Plane Graph");
+            xyseries.add(algorithm.getBias(), (algorithm.getBias()-1)/2);
+            xyseries.add(algorithm.getBias()+25, (algorithm.getBias()+25-1)/2);
+            XYSeriesCollection xyseriescollection = new XYSeriesCollection(xyseries);
+            JFreeChart jfreechart = ChartFactory.createXYLineChart("Plane Graph", "X", "Y", xyseriescollection, PlotOrientation.VERTICAL, true, true, false);
+            XYPlot xyplot = (XYPlot) jfreechart.getPlot();
+    //        NumberAxis numberaxis = (NumberAxis) xyplot.getDomainAxis();
+    //        numberaxis.setStandardTickUnits(new StandardTickUnitSource());
+    //        NumberAxis numberaxis1 = (NumberAxis) xyplot.getRangeAxis();
+    //        numberaxis1.setStandardTickUnits(new StandardTickUnitSource());
+    //        numberaxis1.setAutoRangeMinimumSize(4.9406564584124654E-324D);r
+            ChartPanel chartpanel = new ChartPanel(jfreechart);
+            chartpanel.setPreferredSize(new Dimension(500, 270));
+
+            Utils.showDialoj("Plane Graph", chartpanel, this);
+        } catch (UnsupportedOperationException uoe) {
+            
+        }
     }//GEN-LAST:event_showPlaneBtnActionPerformed
 
     private void perceptronMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_perceptronMIActionPerformed
@@ -536,12 +565,22 @@ public class InputForm extends javax.swing.JFrame {
     }//GEN-LAST:event_showTestDataBtnActionPerformed
 
     private void showErrorsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showErrorsBtnActionPerformed
-        System.out.println("errorlogs = "+algorithm.getErrorLog().size());
-        eg = new ErrorGraph("Errors", algorithm.getErrorLog());
-        eg.pack();
-        eg.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        RefineryUtilities.centerFrameOnScreen(eg);
-        eg.setVisible(true);
+        DefaultCategoryDataset categorydataset = new DefaultCategoryDataset();
+        for (int i = 0; i < algorithm.getErrorLog().size(); i++) {
+            categorydataset.addValue(algorithm.getErrorLog().get(i), "Global error", ""+i);
+        }
+        JFreeChart jfreechart = ChartFactory.createLineChart("Error Graph", null, "Error Graph", categorydataset, PlotOrientation.VERTICAL, false, true, false);
+        CategoryPlot categoryplot = (CategoryPlot) jfreechart.getPlot();
+        categoryplot.setRangePannable(true);
+        categoryplot.setRangeGridlinesVisible(false);
+        NumberAxis numberaxis = (NumberAxis) categoryplot.getRangeAxis();
+        numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        ChartUtilities.applyCurrentTheme(jfreechart);
+        
+        ChartPanel chartpanel = new ChartPanel(jfreechart);
+        chartpanel.setMouseWheelEnabled(true);
+        
+        Utils.showDialoj("Error Graph", chartpanel, this);
     }//GEN-LAST:event_showErrorsBtnActionPerformed
 
     private void reset(String selectedAlgortihm) {
@@ -634,7 +673,6 @@ public class InputForm extends javax.swing.JFrame {
     private List<String> data;
     private String lastUsedDirectory = "c:";
     private JFileChooser jfc;    
-    private ErrorGraph eg;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMI;
     private javax.swing.JMenuItem adelineMI;

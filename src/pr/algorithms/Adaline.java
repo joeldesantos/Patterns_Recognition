@@ -7,7 +7,6 @@ package pr.algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
-import static pr.algorithms.PerceptronV2.calculateOutput;
 import pr.util.Utils;
 
 /**
@@ -176,6 +175,11 @@ public class Adaline implements Algorithm{
     @Override
     public List<Double> getErrorLog() {
         return this.errorLog;
+    }
+
+    @Override
+    public double getBias() {
+        return weights[0];
     }
 
 }
